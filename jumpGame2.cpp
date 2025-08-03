@@ -2,22 +2,36 @@
 #include <iostream>
 using namespace std;
 
+
 class Solution {
 public:
-    bool canJump(vector<int>& nums) {
-        if(nums.size()==1)
-        return 1;
-        if(nums[0]==0)
+    int solve(vector<int> & nums , int ind , int jump ,  vector<int>& dp){
+        if(ind >= nums.size()-1)
         return 0;
 
+        if(dp[ind]!=-1)
+        return dp[ind];
 
-        int maxInd = 0;
+        int count = nums[ind];
+        int ans = INT_MAX;
+        
+        for(int i = 1 ; i <= count ; i++){
+            int res = solve(nums , ind + i , jump + 1, dp);
 
-        for(int i = 0 ; i < nums.size() - 1 && i <= maxInd ; i++ ){
-            if(maxInd < (i+nums[i])){
-                maxInd = (i+nums[i]);
+            if(res != INT_MAX){
+                ans = min(ans , res+1);
             }
         }
-        return nums.size()-1 <= maxInd;
+        dp[ind] = ans;
+
+
+        
+        return dp[ind];
+    }
+    int jump(vector<int>& nums) {
+
+       vector<int>dp(nums.size()+1,-1);
+        return solve(nums , 0, 0 , dp);
+        
     }
 };
